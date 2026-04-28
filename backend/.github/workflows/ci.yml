@@ -70,6 +70,11 @@ jobs:
           cd backend
           npm test -- --coverage
 
-      - name: 6. Build image Docker
+      - name: 6. Analyser avec SonarCloud
+        run: npx sonar-scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: 7. Build image Docker
         run: |
           docker build -t backend-app:latest ./backend
