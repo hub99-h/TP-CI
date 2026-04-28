@@ -1,0 +1,75 @@
+name: CI React Node
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: 2. Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 3. Installer les dépendances
+        run: |
+          cd frontend
+          npm ci
+
+      - name: 4. Lancer ESLint
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: 5. Lancer les tests
+        run: |
+          cd frontend
+          npm test -- --watchAll=false --coverage
+
+      - name: 6. Build React
+        run: |
+          cd frontend
+          npm run build
+
+      - name: 7. Build image Docker
+        run: |
+          docker build -t frontend-app:latest ./frontend
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: 2. Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 3. Installer les dépendances
+        run: |
+          cd backend
+          npm ci
+
+      - name: 4. Lancer ESLint
+        run: |
+          cd backend
+          npm run lint
+
+      - name: 5. Lancer les tests
+        run: |
+          cd backend
+          npm test -- --coverage
+
+      - name: 6. Build image Docker
+        run: |
+          docker build -t backend-app:latest ./backend
