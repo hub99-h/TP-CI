@@ -71,8 +71,9 @@ jobs:
           npm test -- --coverage
 
       - name: 6. Analyser avec SonarCloud
-        run: npx sonar-scanner
+        uses: SonarSource/sonarcloud-github-action@master
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: 7. Build image Docker
