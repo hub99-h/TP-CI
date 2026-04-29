@@ -40,9 +40,11 @@ jobs:
           cd frontend
           npm run build
 
-      - name: 7. Build image Docker
+      - name: 7. Build et push image Docker frontend
         run: |
-          docker build -t frontend-app:latest ./frontend
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u hub99-h --password-stdin
+          docker build -t ghcr.io/hub99-h/tp-ci-frontend:latest ./frontend
+          docker push ghcr.io/hub99-h/tp-ci-frontend:latest
 
   backend:
     runs-on: ubuntu-latest
@@ -76,6 +78,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: 7. Build image Docker
+      - name: 7. Build et push image Docker backend
         run: |
-          docker build -t backend-app:latest ./backend
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u hub99-h --password-stdin
+          docker build -t ghcr.io/hub99-h/tp-ci-backend:latest ./backend
+          docker push ghcr.io/hub99-h/tp-ci-backend:latest
