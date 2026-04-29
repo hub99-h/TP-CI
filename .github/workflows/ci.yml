@@ -49,6 +49,14 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u hub99-h --password-stdin
           docker build -t ghcr.io/hub99-h/tp-ci-frontend:latest ./frontend
           docker push ghcr.io/hub99-h/tp-ci-frontend:latest
+      
+      - name: 8. Scan sécurité image frontend (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/hub99-h/tp-ci-frontend:latest
+          format: table
+          exit-code: '0'
+          severity: CRITICAL,HIGH
 
   backend:
     runs-on: ubuntu-latest
@@ -87,3 +95,11 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u hub99-h --password-stdin
           docker build -t ghcr.io/hub99-h/tp-ci-backend:latest ./backend
           docker push ghcr.io/hub99-h/tp-ci-backend:latest
+      
+      - name: 8. Scan sécurité image frontend (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/hub99-h/tp-ci-frontend:latest
+          format: table
+          exit-code: '0'
+          severity: CRITICAL,HIGH
